@@ -144,4 +144,5 @@ constructor of your SubValidator.  Just set $this->_throw to false after you cal
 ##TODO
  - Figure out if anything else in the Validator should move to the Parser.
  - Other validators?
- 
+ - Database object injection
+ - Fix the array constructor stuff. 
