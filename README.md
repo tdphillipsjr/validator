@@ -145,4 +145,5 @@ constructor of your SubValidator.  Just set $this->_throw to false after you cal
  - Figure out if anything else in the Validator should move to the Parser.
  - Other validators?
  - Database object injection
- - Fix the array constructor stuff. 
+ - Fix the array constructor stuff.
+ - Should probably make an interface for dependency injection purposes. 
