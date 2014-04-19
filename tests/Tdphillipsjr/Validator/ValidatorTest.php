@@ -4,6 +4,27 @@ namespace Tdphillipsjr\Validator;
 
 use Tdphillipsjr\Validator\Validator;
 
+class MockObject
+{
+    private $validator;
+    
+    public function setValidator(Validator $validator)
+    {
+        $this->validator = $validator;
+    }
+    
+    public function loadValidator($data, $schema)
+    {
+        $this->validator->loadData($data);
+        $this->validator->loadSchema($schema);
+    }
+    
+    public function validate()
+    {
+        return $this->validator->validate();
+    }
+}
+
 class ValidatorTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp()
@@ -543,6 +564,33 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     {
         $validator = $this->_createValidator();
         $this->assertEquals('', $validator->requiredBecause(array('min:2', 'max:14')));
+    }
+
+    public function testDependencyInjectionPass()
+    {
+        $mock       = new MockObject();
+        $validator  = new Validator();
+        
+        $mock->setValidator($validator);
+        $data   = array('id' => 1234);
+        $schema = array('id' => 'required');
+        $mock->loadValidator($data, $schema);
+        
+        $this->assertTrue($mock->validate());
+    }
+
+    public function testDependencyInjectionFail()
+    {
+        $mock = new MockObject();
+        $validator = new Validator();
+        
+        $mock->setValidator($validator);
+        $data   = array('id' => null);
+        $schema = array('id' => 'required');
+        $mock->loadValidator($data, $schema);
+        
+        $this->setExpectedException('\Tdphillipsjr\Validator\ValidatorException');
+        $mock->validate();
     }
 }
 ?>
