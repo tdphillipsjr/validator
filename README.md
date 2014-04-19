@@ -12,7 +12,7 @@ language is defined as follows:
 The Validator class is designed to manage multiple sub validators class, which all inherit from BaseValidator.
 
 ##Sample Usage
-    $validator = new Validator\Validator();
+    $validator = new Tdphillipsjr\Validator\Validator();
     
     // Load the data in the form of an array
     $validator->loadData(array('id'     => 1,
