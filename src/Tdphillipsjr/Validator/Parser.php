@@ -46,7 +46,8 @@ class Parser
          * are separated by commas.
          */
         if (sizeof($validationData) > 1) {
-            $returnData['parameters'] = explode(',', $validationData[1]);
+            $params = explode(',', $validationData[1]);
+            $returnData['parameters'] = sizeof($params) > 1 ? $params : $params[0];
         }
 
         return $returnData;

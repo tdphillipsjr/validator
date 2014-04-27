@@ -29,7 +29,7 @@ class ParserTest extends \PHPUnit_Framework_TestCase
     {
         $testString = 'test:1';
         $expected = array('class'       => '\Tdphillipsjr\Validator\TestValidator',
-                          'parameters'  => array(1));
+                          'parameters'  => 1);
         $this->assertEquals($expected, $this->parser->parseCall($testString));
     }
     
