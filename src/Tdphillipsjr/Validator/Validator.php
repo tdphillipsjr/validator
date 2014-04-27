@@ -90,10 +90,8 @@ class Validator
              * See if this is required.  If it is and it doesn't exist add an error and break
              * from this iteration.  Checking for additional validations is redundant.
              */
-            if ($this->isRequired($validations))
-            {
-                if ( ! $this->fieldExists($index))
-                {
+            if ($this->isRequired($validations)) {
+                if ( ! $this->fieldExists($index)) {
                     $this->_errors[] = "$index is required" . $this->requiredBecause($validations);
                     continue;
                 }
