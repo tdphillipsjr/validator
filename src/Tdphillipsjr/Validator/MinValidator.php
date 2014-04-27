@@ -7,22 +7,28 @@ namespace Tdphillipsjr\Validator;
  * differently based on the type of data.
  *      $data = string: $min considers the length of the string.
  *      $data = number: $min considers the value of the number
+ *      $data = array(): $min be compared to each value; one failure will fail.
  */
 class MinValidator extends BaseValidator
 {
     public function __construct($data, $min)
     {
-        $min = is_array($min) ? $min[0] : $min;
         parent::__construct($data, $min);
     }
     
     public function validate()
     {
-        if (is_numeric($this->_data)) {
-            if ($this->_data < $this->_validateAgainst) $this->addError('Numeric value too small. Minimum is ' . $this->_validateAgainst);
-        
-        } else if (is_string($this->_data)) {
-            if (strlen($this->_data) < $this->_validateAgainst) $this->addError('Entry must be longer than ' . $this->_validateAgainst . ' characters.');
+        // If it's a scalar value, make it an array.
+        $dataArray = !is_array($this->_data) ? array($this->_data) : $this->_data;
+
+        // Do the comparisons
+        foreach ($dataArray as $data) {
+            if (is_numeric($data)) {
+                if ($data < $this->_validateAgainst) $this->addError('Numeric value too small. Minimum is ' . $this->_validateAgainst);
+            
+            } else if (is_string($data)) {
+                if (strlen($data) < $this->_validateAgainst) $this->addError('Entry must be longer than ' . $this->_validateAgainst . ' characters.');
+            }
         }
         
         return !sizeof($this->_errors);

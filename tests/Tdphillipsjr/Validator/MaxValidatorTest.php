@@ -18,6 +18,12 @@ class MaxValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->validate());
     }
     
+    public function testMaxValidatorArrayPass()
+    {
+        $validator = new MaxValidator(array(1,2,15), 15);
+        $this->assertTrue($validator->validate());
+    }
+    
     public function testMaxValidatorPassesStringLessThan()
     {
         $validator = new MaxValidator('this is a string', 17);
@@ -27,6 +33,12 @@ class MaxValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMaxValidatorPassesStringEquals()
     {
         $validator = new MaxValidator('this is a string', 16);
+        $this->assertTrue($validator->validate());
+    }
+    
+    public function testMaxValidatorPassesStringArray()
+    {
+        $validator = new MaxValidator(array('test', 'this', 'stuff'), 5);
         $this->assertTrue($validator->validate());
     }
     
@@ -50,6 +62,17 @@ class MaxValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->validate();
     }
     
+    /**
+     * @expectedException Tdphillipsjr\Validator\ValidationException
+     * @expectedMessage Numeric value too large. Maximum is 15
+     */
+    public function testMaxValidatorNumFailsArray()
+    {
+        $validator = new MaxValidator(array(16,1,2), 15);
+        $validator->setThrow(true);
+        $validator->validate();
+    }
+    
     public function testMaxValidatorStringFailsWithoutException()
     {
         $validator = new MaxValidator('this is a string', 15);
@@ -66,6 +89,17 @@ class MaxValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMaxValidatorStringFailsWithException()
     {
         $validator = new MaxValidator('this is a string', 15);
+        $validator->setThrow(true);
+        $validator->validate();
+    }
+    
+    /**
+     * @expectedException Tdphillipsjr\Validator\ValidationException
+     * @expectedMessage Entry must be shorter than 4 characters.
+     */
+    public function testMaxValidatorStringFailsWithExceptionArray()
+    {
+        $validator = new MaxValidator(array('test', 'stuff', 'this'), 4);
         $validator->setThrow(true);
         $validator->validate();
     }

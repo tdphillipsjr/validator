@@ -9,13 +9,6 @@ class EqualToValidator extends BaseValidator
 {
     public function __construct($data, $equals)
     {
-        /**
-         * If both arguments are arrays, assume we want to compare arrays.  if only $equals is an 
-         * array, strip it in to a value
-         */
-        if (is_array($equals) && ! is_array($data)) {
-            $equals = $equals[0];
-        }
         parent::__construct($data, $equals);
     }
     

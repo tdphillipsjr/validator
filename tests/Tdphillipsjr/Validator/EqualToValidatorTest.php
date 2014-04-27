@@ -30,10 +30,14 @@ class EqualToValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->validate());
     }
     
-    public function testEqualToValidatorFromValidator()
+    /**
+     * Assert that a scalar value is not equal to an array with a single index containing
+     * the same value. This tests the previous state of the validator.
+     */
+    public function testNotEqualToValidatorFromValidator()
     {
         $validator = new EqualToValidator(10, array(10));
-        $this->assertTrue($validator->validate());
+        $this->assertFalse($validator->validate());
     }
     
     public function testEqualToValidatorFailsWithoutException()

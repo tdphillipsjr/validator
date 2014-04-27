@@ -17,6 +17,12 @@ class MinValidatorTest extends \PHPUnit_Framework_TestCase
         $validator = new MinValidator(15, 15);
         $this->assertTrue($validator->validate());
     }
+
+    public function testMinValidatorArrayPass()
+    {
+        $validator = new MinValidator(array(21,22,15), 15);
+        $this->assertTrue($validator->validate());
+    }
     
     public function testMinValidatorPassesStringLessThan()
     {
@@ -27,6 +33,12 @@ class MinValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMinValidatorPassesStringEquals()
     {
         $validator = new MinValidator('this is a string', 16);
+        $this->assertTrue($validator->validate());
+    }
+
+    public function testMinValidatorPassesStringArray()
+    {
+        $validator = new MinValidator(array('test', 'this', 'stuff'), 3);
         $this->assertTrue($validator->validate());
     }
     
@@ -49,6 +61,17 @@ class MinValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->setThrow(true);
         $validator->validate();
     }
+
+    /**
+     * @expectedException Tdphillipsjr\Validator\ValidationException
+     * @expectedMessage Numeric value too large. Minimum is 15
+     */
+    public function testMinValidatorNumFailsArray()
+    {
+        $validator = new MinValidator(array(16,1,2), 15);
+        $validator->setThrow(true);
+        $validator->validate();
+    }
     
     public function testMinValidatorStringFailsWithoutException()
     {
@@ -66,6 +89,17 @@ class MinValidatorTest extends \PHPUnit_Framework_TestCase
     public function testMinValidatorStringFailsWithException()
     {
         $validator = new MinValidator('this is a string', 17);
+        $validator->setThrow(true);
+        $validator->validate();
+    }
+
+    /**
+     * @expectedException Tdphillipsjr\Validator\ValidationException
+     * @expectedMessage Entry must be longer than 6 characters.
+     */
+    public function testMinValidatorStringFailsWithExceptionArray()
+    {
+        $validator = new MinValidator(array('test', 'stuff', 'this', 'nonsense'), 6);
         $validator->setThrow(true);
         $validator->validate();
     }
