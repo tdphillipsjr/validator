@@ -89,22 +89,23 @@ constructor of your SubValidator.  Just set $this->_throw to false after you cal
  - behavior: Check that the data given equals the value given.  This will also compare arrays if BOTH arguments to the validator are arrays.
  - Notes:
     - This does not run ===, but just ==.
-    - If both fields are non-array, the equals will simply be run.
     - If both fields are array, it will compare the arrays.
-    - If the first argument is non-array and the second is an array, this will compare the first index of the second array to the
-        non-array value.  This is to support Validator sending it an array.
 
 ###MaxValidator
  - usage: "max:250"
  - behavior:
     - If string, assert the string is less than or equal to 250 characters.
     - If numeric, assert the number is less than or equal to 250.
+    - If array is passed, each index of the array will be compared.  The first failure will cause the validator to fail.
+        Any values after the first failure will not be compared.
     
 ###MinValidator
  - usage: "min:250"
  - behavior:
     - If string, assert the string is at least 250 characters.
     - If numeric, assert the number is greater than or equal to 250.
+    - If array is passed, each index of the array will be compared.  The first failure will cause the validator to fail.
+        Any values after the first failure will not be compared.
 
 ###NumberValidator
  - usage: "number"
@@ -145,5 +146,5 @@ constructor of your SubValidator.  Just set $this->_throw to false after you cal
  - Figure out if anything else in the Validator should move to the Parser.
  - Other validators?
  - Database object injection
- - Fix the array constructor stuff.
+ 
  - Should probably make an interface for dependency injection purposes. 
