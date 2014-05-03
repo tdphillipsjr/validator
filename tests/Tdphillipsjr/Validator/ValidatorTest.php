@@ -445,6 +445,27 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($validator->fieldExists('type'));
     }
     
+    public function testFieldExistsFalse()
+    {
+        $this->data['type'] = false;
+        $validator = $this->_createValidator();
+        $this->assertFalse($validator->fieldExists('type'));
+    }
+    
+    public function testFieldExistsNumericZero()
+    {
+        $this->data['type'] = 0;
+        $validator = $this->_createValidator();
+        $this->assertTrue($validator->fieldExists('type'));
+    }
+    
+    public function testFieldExistsCharacterZero()
+    {
+        $this->data['type'] = '0';
+        $validator = $this->_createValidator();
+        $this->assertTrue($validator->fieldExists('type'));
+    }
+    
     public function testFieldExistsDoesntExist()
     {
         unset($this->data['type']);
@@ -591,6 +612,31 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         
         $this->setExpectedException('\Tdphillipsjr\Validator\ValidatorException');
         $mock->validate();
+    }
+    
+    public function testMinLanguageSinglePass()
+    {
+        $this->data = array('type' => 2);
+        $this->schema = array('type' => 'min:1');
+        $validator = $this->_createValidator();
+        $this->assertTrue($validator->validate());
+    }
+    
+    public function testMinLanguageSingleFail()
+    {
+        $this->data = array('type' => 0);
+        $this->schema = array('type' => 'min:1');
+        $validator = $this->_createValidator();
+        $this->setExpectedException('\Tdphillipsjr\Validator\ValidatorException');
+        $this->assertFalse($validator->validate());
+    }
+    
+    public function testMinLanguageCastStringPass()
+    {
+        $this->data = array('type' => 0);
+        $this->schema = array('type' => 'min:string,1');
+        $validator = $this->_createValidator();
+        $this->assertTrue($validator->validate());
     }
 }
 ?>

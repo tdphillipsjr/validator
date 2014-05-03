@@ -108,7 +108,7 @@ class Validator
                 if ($this->_bypassValidation($validation)) continue;
                 
                 // If the value isn't required and the key doesn't exist (or is empty), we don't need to fail.
-                if (!$required && (!isset($this->_data[$index]) || empty($this->_data[$index]))) continue;
+                if (!$required && !$this->fieldExists($index)) continue;
                 
                 // Parse each validation cell in to the class and the parameters.
                 $callData = $this->_parser->parseCall($validation);
@@ -152,14 +152,24 @@ class Validator
     }
     
     /**
-     * Given an index, check to see if it exists and has data.
+     * Given an index, check to see if it exists and has data.  We should let numeric
+     * zero pass here since a field containing zero does contain something.  Null, false
+     * and empty string should still fail.
      *
      * @param   string  $index      An index in the data array.
      * @return  boolean
      */
     public function fieldExists($index)
     {
-        return isset($this->_data[$index]) && !empty($this->_data[$index]);
+        if (!isset($this->_data[$index])) {
+            return false;
+        } else {
+            if (is_numeric($this->_data[$index])) {
+                return true;
+            } else {
+                return !empty($this->_data[$index]);
+            }
+        }
     }
     
     /**
