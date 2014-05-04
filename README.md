@@ -48,6 +48,29 @@ throw a Validator\ValidationException.  However, by calling SubValidator->setThr
 false if validation fails with the error stored in an error array accessible via SubValidator->getErrors().  You can also override this in the 
 constructor of your SubValidator.  Just set $this->_throw to false after you call parent::__construct.
 
+### Usage with interface
+Package includes an interface Validatable.  Validatable requires functions "getSchema", "getData", and "validate".  When used, 
+the function $validator->validateObject(Validatable) may be used.
+    class Object implements Validatable
+    {
+        public function getSchema()
+        {
+            return array('type' => 'required');
+        }
+        public function getData()
+        {
+            return array('type' => 1);
+        }
+        public function validate(\Tdphillipsjr\Validator\Validator $validator)
+        {
+            return $validator->validateObject($this);
+        }
+    }
+    
+    $object = new Object();
+    $validator = new Validator();
+    $object->validate();
+
 ##Validations without SubValidators
 
 ###required
@@ -143,8 +166,6 @@ constructor of your SubValidator.  Just set $this->_throw to false after you cal
  - behavior: This a validly formatted URL.  Not RFC inclusive but should check most common types.
 
 ##TODO
- - Figure out if anything else in the Validator should move to the Parser.
  - Other validators?
  - Database object injection
  
- - Should probably make an interface for dependency injection purposes. 

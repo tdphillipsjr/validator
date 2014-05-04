@@ -3,6 +3,7 @@
 namespace Tdphillipsjr\Validator;
 
 use Tdphillipsjr\Validator\Parser;
+use Tdphillipsjr\Validator\Validatable;
 
 class ValidatorException extends \Exception
 {
@@ -74,6 +75,16 @@ class Validator
     public function getErrors()
     {
         return $this->_errors;
+    }
+    
+    /**
+     * Validate a Validatable object.
+     */
+    public function validateObject(Validatable $object)
+    {
+        $this->_schema = $object->getSchema();
+        $this->_data   = $object->getData();
+        return $this->validate();
     }
 
     /**

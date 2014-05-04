@@ -3,6 +3,7 @@
 namespace Tdphillipsjr\Validator;
 
 use Tdphillipsjr\Validator\Validator;
+use Tdphillipsjr\Validator\Validatable;
 
 class MockObject
 {
@@ -22,6 +23,30 @@ class MockObject
     public function validate()
     {
         return $this->validator->validate();
+    }
+}
+
+class SecondMockObject implements Validatable
+{
+    public $data = array('type'  => 1,
+                         'value' => 'some data',
+                         'more'  => 'stuff');
+
+    public function getData()
+    {
+        return $this->data;
+    }
+    
+    public function getSchema()
+    {
+        return array('type'  => 'required',
+                     'value' => 'max:20',
+                     'more'  => 'choice:stuff,here');
+    }
+    
+    public function validate(Validator $validator)
+    {
+        return $validator->validateObject($this);
     }
 }
 
@@ -612,6 +637,22 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
         
         $this->setExpectedException('\Tdphillipsjr\Validator\ValidatorException');
         $mock->validate();
+    }
+    
+    public function testValidateObjectPass()
+    {
+        $mock = new SecondMockObject();
+        $validator = new Validator();
+        $this->assertTrue($validator->validateObject($mock));
+    }
+    
+    public function testValidateObjectFail()
+    {
+        $mock = new SecondMockObject();
+        unset($mock->data['type']);
+        $validator = new Validator();
+        $this->setExpectedException('\Tdphillipsjr\Validator\ValidatorException');
+        $this->assertFalse($validator->validateObject($mock));
     }
     
     public function testMinLanguageSinglePass()
