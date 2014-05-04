@@ -18,12 +18,6 @@ class MinValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->validate());
     }
 
-    public function testMinValidatorArrayPass()
-    {
-        $validator = new MinValidator(array(21,22,15), 15);
-        $this->assertTrue($validator->validate());
-    }
-    
     public function testMinValidatorPassesStringLessThan()
     {
         $validator = new MinValidator('this is a string', 15);
@@ -36,24 +30,27 @@ class MinValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->validate());
     }
 
-    public function testMinValidatorPassesStringArray()
-    {
-        $validator = new MinValidator(array('test', 'this', 'stuff'), 3);
-        $this->assertTrue($validator->validate());
-    }
-    
     public function testMinValidatorNumberFailsWithoutException()
     {
         $validator = new MinValidator(10, 15);
         $validator->setThrow(false);
         $this->assertFalse($validator->validate());
-        $expectedMessage = array('Numeric value too small. Minimum is 15');
+        $expectedMessage = array('Validation failed:  10 is less than minimum 15.');
         $this->assertEquals($validator->getErrors(), $expectedMessage);
+    }
+
+    public function testMinValidatorCastStringPass()
+    {
+        $validator = new MinValidator(0, 1);
+        $validator->setThrow(false);
+        $this->assertFalse($validator->validate());
+        $validator = new MinValidator(0, array('string', 1));
+        $this->assertTrue($validator->validate());
     }
     
     /**
      * @expectedException Tdphillipsjr\Validator\ValidationException
-     * @expectedMessage Numeric value too small. Minimum is 10
+     * @expectedExceptionMessage Validation failed:  10 is less than minimum 15.
      */
     public function testMinValidatorNumberFailsWithException()
     {
@@ -62,44 +59,22 @@ class MinValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->validate();
     }
 
-    /**
-     * @expectedException Tdphillipsjr\Validator\ValidationException
-     * @expectedMessage Numeric value too large. Minimum is 15
-     */
-    public function testMinValidatorNumFailsArray()
-    {
-        $validator = new MinValidator(array(16,1,2), 15);
-        $validator->setThrow(true);
-        $validator->validate();
-    }
-    
     public function testMinValidatorStringFailsWithoutException()
     {
         $validator = new MinValidator('this is a string', 17);
         $validator->setThrow(false);
         $this->assertFalse($validator->validate());
-        $expectedMessage = array('Entry must be longer than 17 characters.');
+        $expectedMessage = array('Failed validating that "this is a string" is at least 17 characters.');
         $this->assertEquals($validator->getErrors(), $expectedMessage);
     }
 
     /**
      * @expectedException Tdphillipsjr\Validator\ValidationException
-     * @expectedMessage Entry must be longer than 17 characters.
+     * @expectedExceptionMessage Failed validating that "this is a string" is at least 17 characters.
      */
     public function testMinValidatorStringFailsWithException()
     {
         $validator = new MinValidator('this is a string', 17);
-        $validator->setThrow(true);
-        $validator->validate();
-    }
-
-    /**
-     * @expectedException Tdphillipsjr\Validator\ValidationException
-     * @expectedMessage Entry must be longer than 6 characters.
-     */
-    public function testMinValidatorStringFailsWithExceptionArray()
-    {
-        $validator = new MinValidator(array('test', 'stuff', 'this', 'nonsense'), 6);
         $validator->setThrow(true);
         $validator->validate();
     }

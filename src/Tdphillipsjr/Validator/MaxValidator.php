@@ -7,30 +7,50 @@ namespace Tdphillipsjr\Validator;
  * differently based on the type of data.
  *      $data = string: $max considers the length of the string.
  *      $data = number: $max considers the value of the number.
- *      $data = array(): $max be compared to each value; one failure will fail.
+ *      If max is an array, the first index is used to tell us how to treat the data.  For instance,
+ *          to treat a zip code as a character data instead of a five digit number.
  */
 class MaxValidator extends BaseValidator
 {
     public function __construct($data, $max)
     {
+        if (is_array($max)) {
+            $this->_validationType = $max[0];
+            $max = $max[1];
+        } else {
+            $this->_validationType = null;
+        }
         parent::__construct($data, $max);
     }
     
     public function validate()
     {
-        // If it's a scalar value, make it an array.
-        $dataArray = !is_array($this->_data) ? array($this->_data) : $this->_data;
-
-        // Do the comparisons
-        foreach ($dataArray as $data) {
-            if (is_numeric($data)) {
-                if ($data > $this->_validateAgainst) $this->addError('Numeric value too large. Maximum is ' . $this->_validateAgainst);
-            
-            } else if (is_string($data)) {
-                if (strlen($data) > $this->_validateAgainst) $this->addError('Entry must be shorter than ' . $this->_validateAgainst . ' characters.');
+        if ($this->_validationType == 'string') {
+            $this->validateString();
+        } else if ($this->_validationType == 'number') {
+            $this->validateNumber();
+        } else {
+            if (is_numeric($this->_data)) {
+                $this->validateNumber();
+            } else {
+                $this->validateString();
             }
         }
         
         return !sizeof($this->_errors);
+    }
+
+    public function validateString()
+    {
+        if (strlen($this->_data) > $this->_validateAgainst) $this->addError('Failed validating that "' . $this->_data . 
+                                                                            '" is no more than ' . $this->_validateAgainst . 
+                                                                            ' characters.');
+    }
+    
+    public function validateNumber()
+    {
+        if ($this->_data > $this->_validateAgainst) $this->addError('Validation failed: ' . $this->_data . 
+                                                                    ' is larger than maximum ' . $this->_validateAgainst . 
+                                                                    '.');
     }
 }

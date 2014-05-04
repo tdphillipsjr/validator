@@ -92,20 +92,20 @@ constructor of your SubValidator.  Just set $this->_throw to false after you cal
     - If both fields are array, it will compare the arrays.
 
 ###MaxValidator
- - usage: "max:250"
+ - usage: "max:250", "max:string,250"
  - behavior:
     - If string, assert the string is less than or equal to 250 characters.
     - If numeric, assert the number is less than or equal to 250.
-    - If array is passed, each index of the array will be compared.  The first failure will cause the validator to fail.
-        Any values after the first failure will not be compared.
+    - Numeric values may be compared as strings by using a cast value as the first argument.  This can be used
+        to compare numbers as string data, such as zip codes.
     
 ###MinValidator
- - usage: "min:250"
+ - usage: "min:250", "min:string,250"
  - behavior:
     - If string, assert the string is at least 250 characters.
     - If numeric, assert the number is greater than or equal to 250.
-    - If array is passed, each index of the array will be compared.  The first failure will cause the validator to fail.
-        Any values after the first failure will not be compared.
+    - Numeric values may be compared as strings by using a cast value as the first argument.  This can be used
+        to compare numbers as string data, such as zip codes.
 
 ###NumberValidator
  - usage: "number"

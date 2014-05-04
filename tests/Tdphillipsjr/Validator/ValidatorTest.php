@@ -616,27 +616,52 @@ class ValidatorTest extends \PHPUnit_Framework_TestCase
     
     public function testMinLanguageSinglePass()
     {
-        $this->data = array('type' => 2);
+        $this->data   = array('type' => 2);
         $this->schema = array('type' => 'min:1');
-        $validator = $this->_createValidator();
+        $validator    = $this->_createValidator();
         $this->assertTrue($validator->validate());
     }
     
     public function testMinLanguageSingleFail()
     {
-        $this->data = array('type' => 0);
+        $this->data   = array('type' => 0);
         $this->schema = array('type' => 'min:1');
-        $validator = $this->_createValidator();
+        $validator    = $this->_createValidator();
         $this->setExpectedException('\Tdphillipsjr\Validator\ValidatorException');
         $this->assertFalse($validator->validate());
     }
     
     public function testMinLanguageCastStringPass()
     {
-        $this->data = array('type' => 0);
+        $this->data   = array('type' => 0);
         $this->schema = array('type' => 'min:string,1');
-        $validator = $this->_createValidator();
+        $validator    = $this->_createValidator();
         $this->assertTrue($validator->validate());
+    }
+    
+    public function testMaxLanguageSinglePass()
+    {
+        $this->data   = array('type' => 12345);
+        $this->schema = array('type' => 'max:14000');
+        $validator    = $this->_createValidator();
+        $this->assertTrue($validator->validate());
+    }
+    
+    public function testMaxLanguageSingleFail()
+    {
+        $this->data   = array('type' => 12345);
+        $this->schema = array('type' => 'max:5');
+        $validator    = $this->_createValidator();
+        $this->setExpectedException('\Tdphillipsjr\Validator\ValidatorException');
+        $this->assertFalse($validator->validate());
+    }
+    
+    public function testMaxLanguageCastStringPass()
+    {
+        $this->data   = array('type' => 12345);
+        $this->schema = array('type' => 'max:string,5');
+        $validator    = $this->_createValidator();
+        $this->assertTrue($validator->validate());    
     }
 }
 ?>
