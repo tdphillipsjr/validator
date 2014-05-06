@@ -51,6 +51,8 @@ constructor of your SubValidator.  Just set $this->_throw to false after you cal
 ### Usage with interface
 Package includes an interface Validatable.  Validatable requires functions "getSchema", "getData", and "validate".  When used, 
 the function $validator->validateObject(Validatable) may be used.
+
+    // A validatable object.
     class Object implements Validatable
     {
         public function getSchema()
@@ -67,9 +69,36 @@ the function $validator->validateObject(Validatable) may be used.
         }
     }
     
+    // Option 1
     $object = new Object();
     $validator = new Validator();
-    $object->validate();
+    $object->validate($validator);
+    
+    //----------------
+    
+    // Any object
+    class Object
+    {
+        public $schema = array('type' => 'required');
+        public $validator;
+        
+        public function __construct()
+        {
+            $this->validator = new \Tdphillipsjr\Validator\Validator();
+            $this->validator->loadSchema($this->schema);
+        }
+        
+        public function create($input)
+        {
+            $this->validator->loadData($input);
+            $this->validator->validate();
+            // Create new object ...
+        }
+    }
+    
+    $object = new Object();
+    $object->create(array('type' => 1));
+    
 
 ##Validations without SubValidators
 
