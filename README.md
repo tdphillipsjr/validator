@@ -193,8 +193,12 @@ the function $validator->validateObject(Validatable) may be used.
 ###UrlValidator
  - usage: "url"
  - behavior: This a validly formatted URL.  Not RFC inclusive but should check most common types.
+ 
+ ###ZipcodeValidator
+  - usage: "zipcode"
+  - behavior: Validate zipcodes in the format of "12345", "12345-6789", or "123456789".  This validates only US zipcodes.
+  - TODO: Fix such that a country code can be accepted as an argument; build in this support.  US as default.
 
 ##TODO
- - Other validators?
- - Database object injection
+ - Unique Value Validator: Requires database object injection
  
