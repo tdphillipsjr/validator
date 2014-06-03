@@ -103,7 +103,7 @@ class Validator
              */
             if ($this->isRequired($validations)) {
                 if ( ! $this->fieldExists($index)) {
-                    $this->_errors[] = "$index is required" . $this->requiredBecause($validations);
+                    $this->_errors[$index][] = "$index is required" . $this->requiredBecause($validations);
                     continue;
                 }
                 $required = true;
@@ -140,7 +140,7 @@ class Validator
                     $validator->setThrow(true);
                     $validator->validate();
                 } catch (ValidationException $e) {
-                    $this->_errors[] = "$index: " . $e->getMessage();
+                    $this->_errors[$index][] = "$index: " . $e->getMessage();
                 }
             }
         }
