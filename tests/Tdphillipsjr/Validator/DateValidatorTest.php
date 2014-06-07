@@ -102,5 +102,35 @@ class DateValidatorTest extends \PHPUnit_Framework_TestCase
         $validator->setThrow(true);
         $validator->validate();
     }
+    
+    public function testDateValidNoFormatMask()
+    {
+        $testDate = "12/31/1945";
+        $validator = new DateValidator($testDate);
+        $this->assertTrue($validator->validate());
+    }
+    
+    public function testDateValidNoFormatMaskWithTime()
+    {
+        $testDate = "12/31/1945 12:15:12";
+        $validator = new DateValidator($testDate);
+        $this->assertTrue($validator->validate());
+    }
+    
+    public function testDateInvalidNoFormatBadDate()
+    {
+        $testDate = "12/85/1955";
+        $validator = new DateValidator($testDate);
+        $validator->setThrow(false);
+        $this->assertFalse($validator->validate());
+    }
+    
+    public function testDateInvalidNoFormatBadTime()
+    {
+        $testDate = "12/15/1955 30:24:12";
+        $validator = new DateValidator($testDate);
+        $validator->setThrow(false);
+        $this->assertFalse($validator->validate());
+    }
 }
 ?>

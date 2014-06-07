@@ -8,7 +8,7 @@ namespace Tdphillipsjr\Validator;
  */
 class DateValidator extends BaseValidator
 {
-    public function __construct($data, $format)
+    public function __construct($data, $format=null)
     {
         $format = is_array($format) ? $format[0] : $format;
         parent::__construct($data, $format);
@@ -32,11 +32,13 @@ class DateValidator extends BaseValidator
             return false;
         }
         
-        
-        // Otherwise, check the format, by running it through date() and matching results
-        $date  = \DateTime::createFromFormat($this->_validateAgainst, $this->_data);
-        $check = $date->format($this->_validateAgainst);
-        if ($check != $this->_data) $this->addError('Date is not in the expected format.');
+        // The format mask is not required, but if it's defined, check it.
+        if ($this->_validateAgainst) {
+            // Otherwise, check the format, by running it through date() and matching results
+            $date  = \DateTime::createFromFormat($this->_validateAgainst, $this->_data);
+            $check = $date->format($this->_validateAgainst);
+            if ($check != $this->_data) $this->addError('Date is not in the expected format.');
+        }
 
         return !sizeof($this->_errors);
     }
