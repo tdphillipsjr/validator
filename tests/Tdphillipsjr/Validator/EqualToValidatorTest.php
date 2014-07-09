@@ -30,6 +30,13 @@ class EqualToValidatorTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($validator->validate());
     }
     
+    public function testEqualToFieldPasses()
+    {
+        $validator = new EqualToValidator('test', 'field-confirm_test');
+        $validator->loadAdditionalData(array('foo' => 'bar', 'confirm_test' => 'test'));
+        $this->assertTrue($validator->validate());
+    }
+    
     /**
      * Assert that a scalar value is not equal to an array with a single index containing
      * the same value. This tests the previous state of the validator.
@@ -53,9 +60,39 @@ class EqualToValidatorTest extends \PHPUnit_Framework_TestCase
      * @expectedException Tdphillipsjr\Validator\ValidationException
      * @expectedExceptionMessage 15 is required to be equal to 10
      */
-    public function testMaxValidatorNumberFailsWithException()
+    public function testEqualToValidatorNumberFailsWithException()
     {
         $validator = new EqualToValidator(15, 10);
+        $validator->setThrow(true);
+        $validator->validate();
+    }
+    
+    /**
+     * @expectedException Tdphillipsjr\Validator\DataException
+     * @expectedExceptionMessage Running an "equal to field" comparison on a field that does not exist
+     */
+    public function testEqualToValidatorFailsFieldDoesntExist()
+    {
+        $validator = new EqualToValidator('test', 'field-confirm_test');
+        $validator->loadAdditionalData(array('foo' => 'bar', 'confirmtest' => 'test'));
+    }
+    
+    public function testEqualToValidatorFailsNoMatch()
+    {
+        $validator = new EqualToValidator('test', 'field-confirm_test');
+        $validator->loadAdditionalData(array('foo' => 'bar', 'confirm_test' => 'testnomatch'));
+        $validator->setThrow(false);
+        $this->assertFalse($validator->validate());
+    }
+
+    /**
+     * @expectedException Tdphillipsjr\Validator\ValidationException
+     * @expectedExceptionMessage test does not match value contained in confirm_test
+     */
+    public function testEqualToValidatorFailsNoMatchWithException()
+    {
+        $validator = new EqualToValidator('test', 'field-confirm_test');
+        $validator->loadAdditionalData(array('foo' => 'bar', 'confirm_test' => 'testnomatch'));
         $validator->setThrow(true);
         $validator->validate();
     }

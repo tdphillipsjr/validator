@@ -137,11 +137,12 @@ the function $validator->validateObject(Validatable) may be used.
  - behavior: Check the format of the field is a valid(ish) e-mail address.  This is not RFC-compliant but matches most common formats.
  
 ###EqualToValidator
- - usage: "equalTo:15"
- - behavior: Check that the data given equals the value given.  This will also compare arrays if BOTH arguments to the validator are arrays.
+ - usage: "equalTo:15", "equalTo:field-<fieldName>
+ - behavior: Check that the data given equals the value given.  This will also compare arrays if BOTH arguments to the validator are arrays.  If the "field" keyword is used, it will compare to another field in the schema 
  - Notes:
     - This does not run ===, but just ==.
     - If both fields are array, it will compare the arrays.
+    - If the field option is used and the field does not exist when loadAdditionalData is called, it will throw a DataException
 
 ###MaxValidator
  - usage: "max:250", "max:string,250"
